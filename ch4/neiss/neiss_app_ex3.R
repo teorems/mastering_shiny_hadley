@@ -143,10 +143,6 @@ server <- function(input, output, session) {
   output$narrative <- renderText(narrative_sample())
   output$sequence <- renderText(narratives()[current_index()])
   
-observeEvent(list(input$nxt, input$bck),
-             {
-               cat("current index", current_index(), "\n")
-             })
 
 }
 
