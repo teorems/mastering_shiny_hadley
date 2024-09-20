@@ -34,7 +34,9 @@ ui <- fluidPage(
     column(10, textOutput("narrative"))
   ),
   fluidRow(
-    column(2, actionButton("nxt", "Next"))
+    column(2, actionButton("nxt", "Next")),
+    column(8, textOutput("sequence")),
+    column(2, actionButton("bck", "Back"))
   )
 )
 
@@ -102,33 +104,50 @@ server <- function(input, output, session) {
 
   # FINAL TOUCH -- eventReactive() to create a reactive that only updates when the button is clicked or the underlying data changes.
   #
-
+  
   narratives <- reactive(selected() %>% pull(narrative))
-
+  
   narrative_sample <- eventReactive(
     list(input$story, selected()),
     narratives() %>% sample(1)
   )
+  current_index <- reactiveVal()
+  
+  observeEvent(list(input$code,input$story), {
+    current_index(NULL)
+  })
+  
+  observe({
+    if (is.null(current_index())) {
+    current_index(match(narrative_sample(), narratives()))
+    current_index(current_index() + 1) } else {
+      current_index(current_index() + 1)
+    }
+    max_rows <- reactive(length(narratives()))
+    if (current_index() > max_rows()) {current_index(1)}
+          }) |> 
+    bindEvent(input$nxt)
+  
+  observe({
+    if (is.null(current_index())) {
+      current_index(match(narrative_sample(), narratives()))
+      current_index(current_index() + 1) } else {
+        current_index(current_index() - 1)
+      }
+    max_rows <- reactive(length(narratives()))
+    if (current_index() == 0) {current_index(max_rows())}
+  }) |> 
+    bindEvent(input$bck)
+  
+
   output$narrative <- renderText(narrative_sample())
+  output$sequence <- renderText(narratives()[current_index()])
+  
+observeEvent(list(input$nxt, input$bck),
+             {
+               cat("current index", current_index(), "\n")
+             })
 
-  # adding buttons and all that jazz
-  #
-
-  # current_index <- reactiveVal()
-  #
-  # next_narrative <- eventReactive(
-  #   input$nxt, {
-  # row_id <- match(narrative_sample(), narratives())
-  # current_index <- row_id + 1
-  # narratives[current_index]
-  #   }
-  # )
-  #
-  #
-  # observeEvent(input$nxt,{
-  #              print(next_narrative())
-  #              print(current_index())
-  #              })
 }
 
 shinyApp(ui, server)
