@@ -1,4 +1,18 @@
-ui <- fluidPage(
+thematic::thematic_shiny()
+theme <- bslib::bs_theme(
+  # Controls the default grayscale palette
+  bg = "#202123", fg = "#B8BCC2",
+  # Controls the accent (e.g., hyperlink, button, etc) colors
+  primary = "#EA80FC", secondary = "#48DAC6",
+  base_font = c("Grandstander", "sans-serif"),
+  code_font = c("Courier", "monospace"),
+  heading_font = "'Helvetica Neue', Helvetica, sans-serif",
+  # Can also add lower-level customization
+  "input-border-color" = "#EA80FC"
+)
+
+ui <- fluidPage(theme = theme,
+  titlePanel("What a fucking awesome app"),
   fluidRow(
     column(3,
            numericInput("lambda1", label = "lambda1", value = 3),
