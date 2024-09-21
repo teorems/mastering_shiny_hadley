@@ -1,0 +1,15 @@
+If you don’t know what part of your code is triggering the problem, a good way to find it is to remove sections of code from your application, piece by piece, until the problem goes away. If removing a particular piece of code makes the problem stop, it’s likely that that code is related to the problem. Alternatively, sometimes it’s simpler to start with a fresh, empty, app and progressively build it up until you find the problem once more.
+
+Once you’ve simplified your app to demonstrate the problem, it’s worthwhile to take a final pass through and check:
+
+Is every input and output in UI related to the problem?
+
+Does your app have a complex layout that you can simplify to help focus on the problem at hand? Have you removed all UI customisation that makes your app look good, but isn’t related to the problem?
+
+Are there any reactives in server() that you can now remove?
+
+If you’ve tried multiple ways to solve the problem, have you removed all the vestiges of the attempts that didn’t work?
+
+Is every package that you load needed to illustrate the problem? Can you eliminate packages by replacing functions with dummy code?
+
+This can be a lot of work, but the pay off is big: often you’ll discover the solution while you make the reprex, and if not, it’s much much easier to get help.
